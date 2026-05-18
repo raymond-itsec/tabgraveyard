@@ -156,6 +156,7 @@ function renderTabs() {
     const epitaph = node.querySelector(".epitaph");
     const buried = node.querySelector(".buried");
     const hauntDate = node.querySelector(".haunt-date");
+    const actions = node.querySelector(".grave-actions");
 
     node.dataset.id = tab.id;
     node.classList.toggle("archived", tab.archived);
@@ -170,6 +171,16 @@ function renderTabs() {
           day: "numeric"
         })}`
       : "";
+    actions.innerHTML = tab.archived
+      ? `
+          <button type="button" data-action="restore">Restore</button>
+          <button type="button" data-action="burn">Burn</button>
+        `
+      : `
+          <button type="button" data-action="resurrect">Resurrect</button>
+          <button type="button" data-action="archive">Archive</button>
+          <button type="button" data-action="haunt">Haunt Me Later</button>
+        `;
 
     fragment.append(node);
   });
@@ -227,6 +238,27 @@ function resurrect(tab) {
 
 function archive(id) {
   updateTab(id, (tab) => ({ ...tab, archived: true, hauntAt: null }));
+}
+
+function restore(id) {
+  updateTab(id, (tab) => ({ ...tab, archived: false }));
+}
+
+function burn(id) {
+  const grave = [...document.querySelectorAll(".grave")].find((item) => item.dataset.id === id);
+  if (grave) {
+    grave.classList.add("burning");
+  }
+
+  window.setTimeout(
+    () => {
+      state.tabs = state.tabs.filter((tab) => tab.id !== id);
+      saveTabs();
+      renderTabs();
+      setNote("Ashes to cache, dust to disk.");
+    },
+    grave ? 900 : 0
+  );
 }
 
 function hauntLater(id) {
@@ -289,6 +321,8 @@ graveyard.addEventListener("click", (event) => {
 
   if (button.dataset.action === "resurrect") resurrect(tab);
   if (button.dataset.action === "archive") archive(tab.id);
+  if (button.dataset.action === "restore") restore(tab.id);
+  if (button.dataset.action === "burn") burn(tab.id);
   if (button.dataset.action === "haunt") hauntLater(tab.id);
 });
 
