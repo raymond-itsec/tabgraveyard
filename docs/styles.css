@@ -1,16 +1,17 @@
 :root {
   color-scheme: dark;
-  --soil: #171814;
-  --night: #20281f;
-  --moss: #7f9c6b;
-  --sage: #becbb0;
-  --fog: #e4e6d9;
-  --stone: #b6b6a8;
-  --stone-dark: #74766d;
-  --rust: #bc6f45;
-  --gold: #e2b85f;
-  --plum: #7b5f83;
-  --shadow: rgba(0, 0, 0, 0.35);
+  --soil: #11150f;
+  --night: #1c241e;
+  --moss: #8aaa75;
+  --sage: #c7d4bb;
+  --fog: #f0efe1;
+  --stone: #c9c8b8;
+  --stone-mid: #a9ab9c;
+  --stone-dark: #74786d;
+  --rust: #c46f47;
+  --gold: #edc766;
+  --ink: #1f221c;
+  --shadow: rgba(0, 0, 0, 0.42);
 }
 
 * {
@@ -18,6 +19,7 @@
 }
 
 body {
+  position: relative;
   min-height: 100vh;
   margin: 0;
   color: var(--fog);
@@ -25,8 +27,73 @@ body {
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
   background:
-    radial-gradient(circle at top right, rgba(226, 184, 95, 0.12), transparent 28rem),
-    linear-gradient(180deg, #232a22 0%, #171814 58%, #10110e 100%);
+    radial-gradient(circle at 78% 8%, rgba(237, 199, 102, 0.16), transparent 20rem),
+    radial-gradient(circle at 18% 18%, rgba(138, 170, 117, 0.1), transparent 24rem),
+    linear-gradient(180deg, #252d27 0%, #171d17 48%, #0d100c 100%);
+  overflow-x: hidden;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 74px 74px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 62%);
+}
+
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.horizon {
+  position: absolute;
+  inset: auto -8vw 0;
+  height: 34vh;
+  background:
+    radial-gradient(ellipse at 18% 100%, rgba(138, 170, 117, 0.16) 0 20%, transparent 21%),
+    radial-gradient(ellipse at 58% 100%, rgba(138, 170, 117, 0.12) 0 30%, transparent 31%),
+    linear-gradient(180deg, transparent 0%, rgba(10, 13, 9, 0.8) 52%, #080a07 100%);
+}
+
+.horizon::before {
+  position: absolute;
+  inset: auto 0 18%;
+  height: 95px;
+  content: "";
+  background:
+    linear-gradient(72deg, transparent 0 47%, rgba(8, 10, 7, 0.9) 48% 52%, transparent 53%),
+    linear-gradient(108deg, transparent 0 47%, rgba(8, 10, 7, 0.85) 48% 52%, transparent 53%);
+  background-size: 170px 95px;
+  opacity: 0.32;
+}
+
+.mist {
+  position: absolute;
+  left: -20vw;
+  width: 140vw;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(210, 220, 198, 0.08);
+  filter: blur(22px);
+}
+
+.mist-one {
+  top: 36vh;
+}
+
+.mist-two {
+  top: 60vh;
+  opacity: 0.68;
+  transform: translateX(12vw);
 }
 
 button,
@@ -39,9 +106,10 @@ button {
   border: 0;
   border-radius: 8px;
   color: #12130f;
-  background: var(--gold);
+  background: linear-gradient(180deg, #f1d27d, var(--gold));
   cursor: pointer;
   font-weight: 800;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 10px 24px rgba(0, 0, 0, 0.18);
   transition:
     transform 160ms ease,
     filter 160ms ease,
@@ -64,7 +132,7 @@ input {
   border: 1px solid rgba(228, 230, 217, 0.24);
   border-radius: 8px;
   color: var(--fog);
-  background: rgba(12, 14, 11, 0.72);
+  background: rgba(9, 12, 8, 0.72);
   padding: 0 0.95rem;
   outline: none;
 }
@@ -75,9 +143,10 @@ input:focus {
 }
 
 .shell {
+  position: relative;
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 32px 0 48px;
+  padding: 28px 0 56px;
 }
 
 .hero {
@@ -85,8 +154,8 @@ input:focus {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: end;
-  min-height: 260px;
-  padding: 52px 0 30px;
+  min-height: 300px;
+  padding: 54px 0 34px;
 }
 
 .kicker {
@@ -99,18 +168,19 @@ input:focus {
 }
 
 h1 {
-  max-width: 780px;
+  max-width: 820px;
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(4rem, 11vw, 8.8rem);
   line-height: 0.9;
   letter-spacing: 0;
+  text-shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
 }
 
 .lede {
   max-width: 620px;
   margin: 22px 0 0;
-  color: var(--sage);
+  color: #d5dec9;
   font-size: 1.05rem;
   line-height: 1.6;
 }
@@ -122,21 +192,41 @@ h1 {
   background:
     radial-gradient(circle at 62% 36%, rgba(32, 40, 31, 0.34) 0 22%, transparent 23%),
     #d8d0ae;
-  box-shadow: 0 0 42px rgba(226, 184, 95, 0.32);
+  box-shadow:
+    0 0 0 18px rgba(216, 208, 174, 0.03),
+    0 0 60px rgba(237, 199, 102, 0.42);
 }
 
-.controls,
-.stats {
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(260px, 0.8fr);
+  gap: 16px;
+  align-items: start;
   border: 1px solid rgba(228, 230, 217, 0.16);
   border-radius: 8px;
-  background: rgba(20, 23, 17, 0.86);
-  box-shadow: 0 18px 42px var(--shadow);
+  background:
+    linear-gradient(135deg, rgba(240, 239, 225, 0.09), transparent 38%),
+    rgba(13, 17, 12, 0.82);
+  box-shadow: 0 24px 70px var(--shadow);
+  padding: 12px;
+  backdrop-filter: blur(16px);
 }
 
 .controls {
   display: grid;
   gap: 22px;
-  padding: 18px;
+  align-content: start;
+  padding: 6px;
+}
+
+.stats {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(240, 239, 225, 0.1);
 }
 
 .bury-form label,
@@ -189,7 +279,7 @@ h1 {
   padding: 4px;
   border: 1px solid rgba(228, 230, 217, 0.16);
   border-radius: 8px;
-  background: rgba(12, 14, 11, 0.56);
+  background: rgba(6, 8, 6, 0.54);
 }
 
 .segmented button,
@@ -207,26 +297,24 @@ h1 {
 
 .segmented button.active {
   color: #13150f;
-  background: var(--moss);
+  background: linear-gradient(180deg, #a8bf8f, var(--moss));
 }
 
 .ghost-button {
   padding: 0 1rem;
-  border: 1px solid rgba(188, 111, 69, 0.62);
+  border: 1px solid rgba(196, 111, 71, 0.62);
   color: #ffd7bd;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  margin-top: 18px;
-  overflow: hidden;
+  box-shadow: none;
 }
 
 .stats div {
-  padding: 16px;
-  background: rgba(12, 14, 11, 0.32);
+  display: grid;
+  align-content: center;
+  min-height: 86px;
+  padding: 18px;
+  background:
+    linear-gradient(135deg, rgba(237, 199, 102, 0.08), transparent 58%),
+    rgba(7, 10, 7, 0.52);
 }
 
 .stats span {
@@ -237,29 +325,46 @@ h1 {
 }
 
 .stats small {
-  color: var(--sage);
+  color: #cbd9bd;
   font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .graveyard {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 28px 22px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 34px 26px;
   align-items: end;
-  min-height: 260px;
-  margin-top: 34px;
-  padding-bottom: 42px;
+  min-height: 300px;
+  margin-top: 38px;
+  padding: 38px 12px 54px;
+  border-radius: 8px;
   background:
-    linear-gradient(transparent 0 74%, rgba(127, 156, 107, 0.08) 74%),
+    linear-gradient(180deg, transparent 0 48%, rgba(9, 13, 8, 0.46) 100%),
+    linear-gradient(transparent 0 72%, rgba(138, 170, 117, 0.11) 72%),
     repeating-linear-gradient(
       92deg,
       transparent 0 42px,
-      rgba(127, 156, 107, 0.07) 42px 45px
+      rgba(138, 170, 117, 0.08) 42px 45px
     );
 }
 
+.graveyard::before {
+  position: absolute;
+  inset: auto 0 0;
+  height: 92px;
+  border-radius: 0 0 8px 8px;
+  content: "";
+  background:
+    radial-gradient(ellipse at 18% 70%, rgba(138, 170, 117, 0.16), transparent 30%),
+    radial-gradient(ellipse at 72% 65%, rgba(138, 170, 117, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(23, 29, 20, 0), rgba(8, 11, 7, 0.92));
+}
+
 .empty-state {
+  position: relative;
   grid-column: 1 / -1;
   align-self: center;
   max-width: 520px;
@@ -270,8 +375,21 @@ h1 {
 }
 
 .grave {
+  position: relative;
   min-width: 0;
   animation: rise 420ms ease both;
+}
+
+.grave::after {
+  position: absolute;
+  right: 16%;
+  bottom: 4px;
+  left: 16%;
+  height: 20px;
+  border-radius: 50%;
+  content: "";
+  background: rgba(0, 0, 0, 0.38);
+  filter: blur(12px);
 }
 
 .grave.departing {
@@ -280,12 +398,13 @@ h1 {
 
 .grave-marker {
   position: relative;
-  max-width: 320px;
-  min-height: 360px;
+  z-index: 1;
+  max-width: 318px;
+  min-height: 374px;
   margin: 0 auto;
   padding-top: 44px;
   color: #20221d;
-  filter: drop-shadow(0 18px 14px rgba(0, 0, 0, 0.32));
+  filter: drop-shadow(0 20px 16px rgba(0, 0, 0, 0.36));
 }
 
 .stone-top {
@@ -294,20 +413,34 @@ h1 {
   height: 116px;
   border-radius: 48% 48% 8px 8px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 38%),
+    radial-gradient(circle at 28% 26%, rgba(255, 255, 255, 0.24), transparent 24%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.26), transparent 38%),
     var(--stone);
 }
 
 .grave-content {
   position: relative;
-  min-height: 316px;
-  padding: 48px 18px 18px;
+  min-height: 328px;
+  padding: 50px 20px 20px;
   border-radius: 44% 44% 8px 8px / 80px 80px 8px 8px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 36%),
-    linear-gradient(180deg, var(--stone), #96998d);
+    radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.22), transparent 24%),
+    repeating-linear-gradient(96deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 18px),
+    linear-gradient(180deg, var(--stone), var(--stone-mid));
   border: 2px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 12px 18px rgba(255, 255, 255, 0.12),
+    inset 0 -18px 24px rgba(39, 42, 35, 0.16);
   text-align: center;
+}
+
+.grave-content::after {
+  position: absolute;
+  inset: auto 18px 12px;
+  height: 3px;
+  border-radius: 999px;
+  content: "";
+  background: rgba(31, 34, 28, 0.18);
 }
 
 .grave-label,
@@ -326,7 +459,7 @@ h1 {
   min-height: 3.2rem;
   margin: 8px 0 8px;
   overflow: hidden;
-  color: #23251f;
+  color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.45rem;
   line-height: 1.1;
@@ -337,7 +470,7 @@ h1 {
 
 .grave-url {
   display: block;
-  color: #315447;
+  color: #285c4b;
   font-size: 0.82rem;
   font-weight: 800;
   overflow: hidden;
@@ -348,7 +481,7 @@ h1 {
 .epitaph {
   min-height: 4.5rem;
   margin: 18px 0 16px;
-  color: #34372f;
+  color: #35382f;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1rem;
   font-style: italic;
@@ -373,8 +506,9 @@ h1 {
   min-height: 2.25rem;
   border: 1px solid rgba(32, 34, 29, 0.18);
   color: #20221d;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.16);
   font-size: 0.84rem;
+  box-shadow: none;
 }
 
 .grave-actions button:hover {
@@ -478,7 +612,7 @@ h1 {
 
   .hero {
     grid-template-columns: 1fr;
-    min-height: 230px;
+    min-height: 260px;
   }
 
   .moon {
@@ -492,9 +626,12 @@ h1 {
     font-size: clamp(3.3rem, 19vw, 5.4rem);
   }
 
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
   .input-row,
-  .toolbar,
-  .stats {
+  .toolbar {
     grid-template-columns: 1fr;
   }
 
