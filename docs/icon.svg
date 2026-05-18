@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Tab Graveyard icon">
+  <rect width="512" height="512" rx="96" fill="#20281f"/>
+  <circle cx="376" cy="108" r="56" fill="#e2b85f"/>
+  <path d="M128 410V210c0-78 62-132 128-132s128 54 128 132v200H128Z" fill="#b6b6a8"/>
+  <path d="M168 410V216c0-53 39-94 88-94s88 41 88 94v194H168Z" fill="#96998d"/>
+  <path d="M204 240h104M224 288h64M216 336h80" stroke="#282b25" stroke-width="24" stroke-linecap="round"/>
+  <path d="M84 430c66-42 126-42 180 0 54-42 109-42 164 0" fill="none" stroke="#7f9c6b" stroke-width="28" stroke-linecap="round"/>
+</svg>

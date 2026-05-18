@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#28352c">
+    <meta
+      name="description"
+      content="A tiny graveyard for tabs you swore you would read later."
+    >
+    <title>Tab Graveyard</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="app-title">
+        <div>
+          <p class="kicker">Rest in tabs</p>
+          <h1 id="app-title">Tab Graveyard</h1>
+          <p class="lede">
+            Paste the links you promised to read later. We will give them the dignified burial they deserve.
+          </p>
+        </div>
+        <div class="moon" aria-hidden="true"></div>
+      </section>
+
+      <section class="controls" aria-label="Bury a tab">
+        <form class="bury-form" id="bury-form">
+          <label for="url-input">URL</label>
+          <div class="input-row">
+            <input
+              id="url-input"
+              name="url"
+              type="url"
+              placeholder="https://example.com/that-article"
+              autocomplete="url"
+              required
+            >
+            <button type="submit">Bury Tab</button>
+          </div>
+          <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="toolbar" aria-label="Graveyard controls">
+          <label class="search-label" for="search-input">Search</label>
+          <input id="search-input" type="search" placeholder="Find a grave...">
+
+          <div class="segmented" role="group" aria-label="Filter graves">
+            <button class="active" type="button" data-filter="all">All</button>
+            <button type="button" data-filter="fresh">Fresh</button>
+            <button type="button" data-filter="ancient">Ancient</button>
+            <button type="button" data-filter="archived">Archive</button>
+          </div>
+
+          <button class="ghost-button" id="mass-funeral" type="button">
+            Mass Funeral
+          </button>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="Graveyard statistics">
+        <div>
+          <span id="grave-count">0</span>
+          <small>buried</small>
+        </div>
+        <div>
+          <span id="ancient-count">0</span>
+          <small>ancient</small>
+        </div>
+        <div>
+          <span id="haunt-count">0</span>
+          <small>haunting later</small>
+        </div>
+      </section>
+
+      <section class="graveyard" id="graveyard" aria-live="polite"></section>
+      <template id="grave-template">
+        <article class="grave">
+          <div class="grave-marker">
+            <div class="stone-top" aria-hidden="true"></div>
+            <div class="grave-content">
+              <p class="grave-label">Here lies</p>
+              <h2></h2>
+              <a class="grave-url" target="_blank" rel="noreferrer"></a>
+              <p class="epitaph"></p>
+              <p class="buried"></p>
+              <p class="haunt-date"></p>
+              <div class="grave-actions">
+                <button type="button" data-action="resurrect">Resurrect</button>
+                <button type="button" data-action="archive">Archive</button>
+                <button type="button" data-action="haunt">Haunt Me Later</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </template>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

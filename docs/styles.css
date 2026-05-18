@@ -1,0 +1,443 @@
+:root {
+  color-scheme: dark;
+  --soil: #171814;
+  --night: #20281f;
+  --moss: #7f9c6b;
+  --sage: #becbb0;
+  --fog: #e4e6d9;
+  --stone: #b6b6a8;
+  --stone-dark: #74766d;
+  --rust: #bc6f45;
+  --gold: #e2b85f;
+  --plum: #7b5f83;
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--fog);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background:
+    radial-gradient(circle at top right, rgba(226, 184, 95, 0.12), transparent 28rem),
+    linear-gradient(180deg, #232a22 0%, #171814 58%, #10110e 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 8px;
+  color: #12130f;
+  background: var(--gold);
+  cursor: pointer;
+  font-weight: 800;
+  transition:
+    transform 160ms ease,
+    filter 160ms ease,
+    background 160ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+input {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  border: 1px solid rgba(228, 230, 217, 0.24);
+  border-radius: 8px;
+  color: var(--fog);
+  background: rgba(12, 14, 11, 0.72);
+  padding: 0 0.95rem;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(226, 184, 95, 0.18);
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  min-height: 260px;
+  padding: 52px 0 30px;
+}
+
+.kicker {
+  margin: 0 0 10px;
+  color: var(--gold);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 780px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(4rem, 11vw, 8.8rem);
+  line-height: 0.9;
+  letter-spacing: 0;
+}
+
+.lede {
+  max-width: 620px;
+  margin: 22px 0 0;
+  color: var(--sage);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.moon {
+  width: clamp(92px, 15vw, 160px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 62% 36%, rgba(32, 40, 31, 0.34) 0 22%, transparent 23%),
+    #d8d0ae;
+  box-shadow: 0 0 42px rgba(226, 184, 95, 0.32);
+}
+
+.controls,
+.stats {
+  border: 1px solid rgba(228, 230, 217, 0.16);
+  border-radius: 8px;
+  background: rgba(20, 23, 17, 0.86);
+  box-shadow: 0 18px 42px var(--shadow);
+}
+
+.controls {
+  display: grid;
+  gap: 22px;
+  padding: 18px;
+}
+
+.bury-form label,
+.search-label {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--sage);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.input-row button {
+  padding: 0 1.2rem;
+  white-space: nowrap;
+}
+
+.form-note {
+  min-height: 1.3rem;
+  margin: 8px 0 0;
+  color: var(--gold);
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr) auto auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.search-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.segmented {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(228, 230, 217, 0.16);
+  border-radius: 8px;
+  background: rgba(12, 14, 11, 0.56);
+}
+
+.segmented button,
+.ghost-button,
+.grave-actions button {
+  color: var(--fog);
+  background: transparent;
+}
+
+.segmented button {
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  color: var(--sage);
+}
+
+.segmented button.active {
+  color: #13150f;
+  background: var(--moss);
+}
+
+.ghost-button {
+  padding: 0 1rem;
+  border: 1px solid rgba(188, 111, 69, 0.62);
+  color: #ffd7bd;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin-top: 18px;
+  overflow: hidden;
+}
+
+.stats div {
+  padding: 16px;
+  background: rgba(12, 14, 11, 0.32);
+}
+
+.stats span {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.stats small {
+  color: var(--sage);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.graveyard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 28px 22px;
+  align-items: end;
+  min-height: 260px;
+  margin-top: 34px;
+  padding-bottom: 42px;
+  background:
+    linear-gradient(transparent 0 74%, rgba(127, 156, 107, 0.08) 74%),
+    repeating-linear-gradient(
+      92deg,
+      transparent 0 42px,
+      rgba(127, 156, 107, 0.07) 42px 45px
+    );
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  align-self: center;
+  max-width: 520px;
+  margin: 46px auto;
+  color: var(--sage);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.grave {
+  min-width: 0;
+  animation: rise 420ms ease both;
+}
+
+.grave.departing {
+  animation: sink 760ms ease forwards;
+}
+
+.grave-marker {
+  position: relative;
+  max-width: 320px;
+  min-height: 360px;
+  margin: 0 auto;
+  padding-top: 44px;
+  color: #20221d;
+  filter: drop-shadow(0 18px 14px rgba(0, 0, 0, 0.32));
+}
+
+.stone-top {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 116px;
+  border-radius: 48% 48% 8px 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 38%),
+    var(--stone);
+}
+
+.grave-content {
+  position: relative;
+  min-height: 316px;
+  padding: 48px 18px 18px;
+  border-radius: 44% 44% 8px 8px / 80px 80px 8px 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 36%),
+    linear-gradient(180deg, var(--stone), #96998d);
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  text-align: center;
+}
+
+.grave-label,
+.buried,
+.haunt-date {
+  margin: 0;
+  color: #4d5048;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.grave h2 {
+  display: -webkit-box;
+  min-height: 3.2rem;
+  margin: 8px 0 8px;
+  overflow: hidden;
+  color: #23251f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  line-height: 1.1;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+.grave-url {
+  display: block;
+  color: #315447;
+  font-size: 0.82rem;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.epitaph {
+  min-height: 4.5rem;
+  margin: 18px 0 16px;
+  color: #34372f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.haunt-date {
+  min-height: 1rem;
+  margin-top: 6px;
+  color: #72523f;
+  letter-spacing: 0.06em;
+}
+
+.grave-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.grave-actions button {
+  min-height: 2.25rem;
+  border: 1px solid rgba(32, 34, 29, 0.18);
+  color: #20221d;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.84rem;
+}
+
+.grave-actions button:hover {
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.grave.archived {
+  opacity: 0.66;
+  filter: grayscale(0.65);
+}
+
+.grave.archived .grave-marker {
+  transform: rotate(-1deg);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px) rotate(1deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes sink {
+  to {
+    opacity: 0;
+    transform: translateY(82px) rotate(-3deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    width: min(100% - 22px, 680px);
+    padding-top: 18px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: 230px;
+  }
+
+  .moon {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    opacity: 0.52;
+  }
+
+  h1 {
+    font-size: clamp(3.3rem, 19vw, 5.4rem);
+  }
+
+  .input-row,
+  .toolbar,
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .segmented {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: row;
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Tab Graveyard",
+  "short_name": "Graveyard",
+  "description": "A tiny graveyard for tabs you swore you would read later.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#171814",
+  "theme_color": "#28352c",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
