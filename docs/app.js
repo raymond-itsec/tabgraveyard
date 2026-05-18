@@ -36,10 +36,33 @@ const hauntCount = document.querySelector("#haunt-count");
 function loadTabs() {
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey));
-    state.tabs = Array.isArray(saved) ? saved : [];
+    state.tabs = Array.isArray(saved) ? dedupeTabs(saved) : [];
+    saveTabs();
   } catch {
     state.tabs = [];
   }
+}
+
+function dedupeTabs(tabs) {
+  const byUrl = new Map();
+
+  tabs.forEach((tab) => {
+    const existing = byUrl.get(tab.url);
+    if (!existing) {
+      byUrl.set(tab.url, tab);
+      return;
+    }
+
+    const shouldReplace =
+      (existing.archived && !tab.archived) ||
+      (existing.archived === tab.archived && new Date(tab.buriedAt) > new Date(existing.buriedAt));
+
+    if (shouldReplace) {
+      byUrl.set(tab.url, tab);
+    }
+  });
+
+  return [...byUrl.values()];
 }
 
 function saveTabs() {
@@ -203,26 +226,41 @@ function addTab(rawUrl) {
     return;
   }
 
-  const alreadyBuried = state.tabs.some((tab) => tab.url === url.href && !tab.archived);
-  if (alreadyBuried) {
+  const existingTab = state.tabs.find((tab) => tab.url === url.href);
+  if (existingTab && !existingTab.archived) {
     setNote("That one is already resting here.");
     return;
   }
 
-  state.tabs.unshift({
-    id: crypto.randomUUID(),
-    url: url.href,
-    title: titleFromUrl(url),
-    buriedAt: new Date().toISOString(),
-    epitaph: epitaphs[Math.floor(Math.random() * epitaphs.length)],
-    archived: false,
-    hauntAt: null
-  });
+  if (existingTab?.archived) {
+    state.tabs = state.tabs.map((tab) =>
+      tab.id === existingTab.id
+        ? {
+            ...tab,
+            title: titleFromUrl(url),
+            buriedAt: new Date().toISOString(),
+            archived: false,
+            hauntAt: null
+          }
+        : tab
+    );
+    setNote("That grave has been restored from the archive.");
+  } else {
+    state.tabs.unshift({
+      id: crypto.randomUUID(),
+      url: url.href,
+      title: titleFromUrl(url),
+      buriedAt: new Date().toISOString(),
+      epitaph: epitaphs[Math.floor(Math.random() * epitaphs.length)],
+      archived: false,
+      hauntAt: null
+    });
+    setNote("A fresh grave appears.");
+  }
 
   saveTabs();
   renderTabs();
   urlInput.value = "";
-  setNote("A fresh grave appears.");
 }
 
 function updateTab(id, updater) {

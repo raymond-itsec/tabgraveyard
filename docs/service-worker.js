@@ -1,4 +1,4 @@
-const cacheName = "tab-graveyard:v4";
+const cacheName = "tab-graveyard:v5";
 const assets = [
   "./",
   "./index.html",
