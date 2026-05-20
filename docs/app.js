@@ -18,7 +18,9 @@ const epitaphs = [
 const state = {
   tabs: [],
   filter: "all",
-  query: ""
+  query: "",
+  burningIds: new Set(),
+  departingIds: new Set()
 };
 
 const form = document.querySelector("#bury-form");
@@ -89,7 +91,11 @@ function dedupeTabs(tabs) {
 }
 
 function saveTabs() {
-  localStorage.setItem(storageKey, JSON.stringify(state.tabs));
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(state.tabs));
+  } catch {
+    setNote("Storage is full or unavailable; changes may not persist.");
+  }
 }
 
 function normalizeUrl(value) {
@@ -104,6 +110,11 @@ function normalizeUrl(value) {
   }
 }
 
+const webExtensions = new Set([
+  "html", "htm", "xhtml", "php", "asp", "aspx", "jsp", "cfm",
+  "md", "txt", "pdf", "json", "xml", "rss", "atom"
+]);
+
 function titleFromUrl(url) {
   const host = url.hostname.replace(/^www\./, "");
   const lastPath = url.pathname
@@ -114,10 +125,18 @@ function titleFromUrl(url) {
 
   if (!lastPath) return fallback;
 
-  const readable = decodeURIComponent(lastPath)
-    .replace(/\.[a-z0-9]{2,5}$/i, "")
-    .replace(/[-_]+/g, " ")
-    .trim();
+  let decoded;
+  try {
+    decoded = decodeURIComponent(lastPath);
+  } catch {
+    decoded = lastPath;
+  }
+
+  const stripped = decoded.replace(/\.([a-z0-9]{2,5})$/i, (match, ext) =>
+    webExtensions.has(ext.toLowerCase()) ? "" : match
+  );
+
+  const readable = stripped.replace(/[-_]+/g, " ").trim();
 
   return readable || fallback;
 }
@@ -207,11 +226,13 @@ function renderEmpty() {
     state.query || state.filter !== "all"
       ? "No graves match the current omen."
       : "The graveyard is empty. Paste a URL above and give a neglected tab a proper farewell.";
-  graveyard.innerHTML = `<p class="empty-state">${copy}</p>`;
+  const message = document.createElement("p");
+  message.className = "empty-state";
+  message.textContent = copy;
+  graveyard.replaceChildren(message);
 }
 
 function renderTabs() {
-  graveyard.innerHTML = "";
   const visibleTabs = getVisibleTabs();
 
   updateStats();
@@ -235,6 +256,8 @@ function renderTabs() {
     node.dataset.id = tab.id;
     node.classList.toggle("archived", tab.archived);
     node.classList.toggle("haunting", !tab.archived && isHaunting(tab));
+    node.classList.toggle("burning", state.burningIds.has(tab.id));
+    node.classList.toggle("departing", state.departingIds.has(tab.id));
     title.textContent = tab.title;
     link.textContent = tab.url;
     link.href = tab.url;
@@ -257,7 +280,7 @@ function renderTabs() {
     fragment.append(node);
   });
 
-  graveyard.append(fragment);
+  graveyard.replaceChildren(fragment);
 }
 
 function setNote(message) {
@@ -328,29 +351,25 @@ function archive(id) {
 }
 
 function restore(id) {
-  updateTab(id, (tab) => ({ ...tab, archived: false }));
+  updateTab(id, (tab) => ({ ...tab, archived: false, hauntAt: null }));
 }
 
 function burn(id) {
   const tab = state.tabs.find((item) => item.id === id);
-  const titlePart = tab ? ` "${tab.title}"` : "";
-  if (!window.confirm(`Burn${titlePart}? This cannot be undone.`)) return;
+  if (!tab) return;
+  if (state.burningIds.has(id)) return;
+  if (!window.confirm(`Burn "${tab.title}"? This cannot be undone.`)) return;
 
-  const grave = [...document.querySelectorAll(".grave")].find((item) => item.dataset.id === id);
-  if (grave) {
-    grave.classList.add("burning");
-    grave.style.pointerEvents = "none";
-  }
+  state.burningIds.add(id);
+  renderTabs();
 
-  window.setTimeout(
-    () => {
-      state.tabs = state.tabs.filter((tab) => tab.id !== id);
-      saveTabs();
-      renderTabs();
-      setNote("Ashes to cache, dust to disk.");
-    },
-    grave ? 900 : 0
-  );
+  window.setTimeout(() => {
+    state.burningIds.delete(id);
+    state.tabs = state.tabs.filter((item) => item.id !== id);
+    saveTabs();
+    renderTabs();
+    setNote("Ashes to cache, dust to disk.");
+  }, 900);
 }
 
 function hauntLater(id) {
@@ -360,20 +379,20 @@ function hauntLater(id) {
 }
 
 function massFuneral() {
-  const ancientActive = state.tabs.filter((tab) => !tab.archived && isAncient(tab));
+  const ancientActive = state.tabs.filter(
+    (tab) => !tab.archived && isAncient(tab) && !state.departingIds.has(tab.id)
+  );
   if (!ancientActive.length) {
     setNote("No ancient tabs are ready for the procession.");
     return;
   }
 
   const ancientIds = new Set(ancientActive.map((tab) => tab.id));
-  document.querySelectorAll(".grave").forEach((grave) => {
-    if (ancientIds.has(grave.dataset.id)) {
-      grave.classList.add("departing");
-    }
-  });
+  ancientIds.forEach((id) => state.departingIds.add(id));
+  renderTabs();
 
   window.setTimeout(() => {
+    ancientIds.forEach((id) => state.departingIds.delete(id));
     state.tabs = state.tabs.map((tab) =>
       ancientIds.has(tab.id) ? { ...tab, archived: true, hauntAt: null } : tab
     );

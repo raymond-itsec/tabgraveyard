@@ -1,4 +1,4 @@
-const version = "8";
+const version = "9";
 const cacheName = `tab-graveyard:${version}`;
 const assets = [
   "./",
@@ -45,7 +45,15 @@ self.addEventListener("fetch", (event) => {
             }
             return response;
           })
-          .catch(() => cached);
+          .catch(
+            () =>
+              cached ||
+              new Response("Offline and not cached.", {
+                status: 503,
+                statusText: "Service Unavailable",
+                headers: { "Content-Type": "text/plain; charset=utf-8" }
+              })
+          );
 
         return cached || networkFetch;
       })
