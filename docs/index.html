@@ -11,11 +11,47 @@
     <title>Tab Graveyard</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" href="./icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=9">
+    <link rel="stylesheet" href="./styles.css?v=10">
   </head>
   <body>
     <div class="scene" aria-hidden="true">
       <div class="horizon"></div>
+      <svg class="silhouette" viewBox="0 0 1600 220" preserveAspectRatio="xMidYEnd slice" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#070a06">
+          <path d="M0 220 L0 196 Q60 188 110 192 Q170 196 230 188 Q300 178 360 184 Q420 190 470 184 L470 220 Z"/>
+          <path d="M470 220 L470 184 L480 168 L488 168 L488 158 L496 158 L496 168 L504 168 L516 184 L560 184 L572 170 L584 170 L584 158 L590 158 L590 170 L600 170 L612 184 L660 188 Q720 192 780 184 Q860 174 940 184 Q1020 194 1100 188 Q1180 182 1260 190 Q1340 198 1420 192 Q1500 186 1600 198 L1600 220 Z"/>
+          <g transform="translate(640 168)">
+            <rect x="-22" y="0" width="44" height="40" rx="2"/>
+            <polygon points="-26,0 0,-26 26,0"/>
+            <rect x="-3" y="-44" width="6" height="22"/>
+            <rect x="-9" y="-38" width="18" height="6"/>
+            <rect x="-6" y="14" width="12" height="22" fill="#11150f"/>
+          </g>
+          <g transform="translate(200 158)" fill="#0a0d08">
+            <rect x="-1.4" y="0" width="2.8" height="62"/>
+            <path d="M0 8 Q-22 -2 -32 -22 M0 14 Q22 6 32 -12 M0 24 Q-18 18 -28 4 M0 30 Q20 24 28 12 M0 40 Q-14 36 -22 26 M0 46 Q16 42 22 32" stroke="#0a0d08" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(1320 176)" fill="#0a0d08">
+            <rect x="-1.2" y="0" width="2.4" height="44"/>
+            <path d="M0 6 Q-14 -2 -22 -16 M0 12 Q14 4 22 -8 M0 22 Q-12 16 -20 6 M0 28 Q12 22 18 12" stroke="#0a0d08" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(820 192)" fill="#0a0d08">
+            <rect x="-1.4" y="-8" width="2.8" height="24"/>
+            <rect x="-7" y="-2" width="16" height="3"/>
+          </g>
+          <g transform="translate(1060 196)" fill="#0a0d08">
+            <path d="M-8 0 Q-8 -14 0 -14 Q8 -14 8 0 Z"/>
+          </g>
+          <g transform="translate(380 196)" fill="#0a0d08">
+            <rect x="-6" y="-12" width="12" height="14" rx="2"/>
+          </g>
+          <g transform="translate(1180 198)" fill="#0a0d08">
+            <path d="M-9 0 Q-9 -10 0 -12 Q9 -10 9 0 Z"/>
+            <rect x="-1.2" y="-18" width="2.4" height="8"/>
+            <rect x="-4" y="-16" width="8" height="2"/>
+          </g>
+        </g>
+      </svg>
       <div class="mist mist-one"></div>
       <div class="mist mist-two"></div>
     </div>
@@ -89,6 +125,9 @@
           <div class="grave-marker">
             <div class="stone-top" aria-hidden="true"></div>
             <div class="grave-content">
+              <span class="moss moss-tl" aria-hidden="true"></span>
+              <span class="moss moss-br" aria-hidden="true"></span>
+              <span class="crack" aria-hidden="true"></span>
               <p class="grave-label">Here lies</p>
               <h2></h2>
               <a class="grave-url" target="_blank" rel="noreferrer"></a>
@@ -102,10 +141,11 @@
               </div>
             </div>
           </div>
+          <div class="grave-tuft" aria-hidden="true"></div>
         </article>
       </template>
     </main>
 
-    <script src="./app.js?v=9" defer></script>
+    <script src="./app.js?v=10" defer></script>
   </body>
 </html>

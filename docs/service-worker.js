@@ -1,4 +1,4 @@
-const version = "9";
+const version = "10";
 const cacheName = `tab-graveyard:${version}`;
 const assets = [
   "./",

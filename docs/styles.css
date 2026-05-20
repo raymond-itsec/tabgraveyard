@@ -64,36 +64,52 @@ body::before {
     linear-gradient(180deg, transparent 0%, rgba(10, 13, 9, 0.8) 52%, #080a07 100%);
 }
 
-.horizon::before {
+.silhouette {
   position: absolute;
-  inset: auto 0 18%;
-  height: 95px;
-  content: "";
-  background:
-    linear-gradient(72deg, transparent 0 47%, rgba(8, 10, 7, 0.9) 48% 52%, transparent 53%),
-    linear-gradient(108deg, transparent 0 47%, rgba(8, 10, 7, 0.85) 48% 52%, transparent 53%);
-  background-size: 170px 95px;
-  opacity: 0.32;
+  inset: auto 0 0;
+  width: 100%;
+  height: 38vh;
+  min-height: 220px;
+  opacity: 0.92;
+  filter: drop-shadow(0 -6px 10px rgba(0, 0, 0, 0.5));
 }
 
 .mist {
   position: absolute;
-  left: -20vw;
-  width: 140vw;
-  height: 120px;
+  left: -40vw;
+  width: 180vw;
+  height: 140px;
   border-radius: 50%;
   background: rgba(210, 220, 198, 0.08);
-  filter: blur(22px);
+  filter: blur(26px);
+  will-change: transform, opacity;
 }
 
 .mist-one {
   top: 36vh;
+  animation: drift-right 64s linear infinite;
 }
 
 .mist-two {
   top: 60vh;
-  opacity: 0.68;
-  transform: translateX(12vw);
+  opacity: 0.62;
+  animation: drift-left 92s linear infinite;
+}
+
+@keyframes drift-right {
+  0% { transform: translateX(-12vw); opacity: 0.55; }
+  50% { opacity: 0.85; }
+  100% { transform: translateX(18vw); opacity: 0.55; }
+}
+
+@keyframes drift-left {
+  0% { transform: translateX(16vw); opacity: 0.45; }
+  50% { opacity: 0.7; }
+  100% { transform: translateX(-14vw); opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mist { animation: none; }
 }
 
 button,
@@ -103,22 +119,27 @@ input {
 
 button {
   min-height: 2.75rem;
-  border: 0;
-  border-radius: 8px;
-  color: #12130f;
-  background: linear-gradient(180deg, #f1d27d, var(--gold));
+  border: 1px solid rgba(228, 230, 217, 0.18);
+  border-radius: 6px;
+  color: var(--fog);
+  background: linear-gradient(180deg, #2c3429 0%, #1a201a 100%);
   cursor: pointer;
-  font-weight: 800;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 10px 24px rgba(0, 0, 0, 0.18);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 6px 16px rgba(0, 0, 0, 0.28);
   transition:
     transform 160ms ease,
     filter 160ms ease,
-    background 160ms ease;
+    background 160ms ease,
+    border-color 160ms ease;
 }
 
 button:hover {
   transform: translateY(-1px);
-  filter: brightness(1.05);
+  border-color: rgba(237, 199, 102, 0.42);
+  filter: brightness(1.08);
 }
 
 button:active {
@@ -198,19 +219,41 @@ h1 {
 }
 
 .dashboard {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.75fr) minmax(260px, 0.8fr);
   gap: 16px;
   align-items: start;
-  border: 1px solid rgba(228, 230, 217, 0.16);
-  border-radius: 8px;
+  border: 1px solid rgba(116, 120, 109, 0.32);
+  border-radius: 6px;
   background:
-    linear-gradient(135deg, rgba(240, 239, 225, 0.09), transparent 38%),
-    rgba(13, 17, 12, 0.82);
-  box-shadow: 0 24px 70px var(--shadow);
-  padding: 12px;
-  backdrop-filter: blur(16px);
+    repeating-linear-gradient(
+      94deg,
+      rgba(255, 255, 255, 0.02) 0 2px,
+      transparent 2px 14px
+    ),
+    linear-gradient(180deg, #20281f 0%, #161c15 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.34),
+    0 20px 48px rgba(0, 0, 0, 0.5);
+  padding: 14px;
 }
+
+.dashboard::before,
+.dashboard::after {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #4a4f44, #1a1d17 70%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+  content: "";
+  top: 8px;
+}
+
+.dashboard::before { left: 8px; }
+.dashboard::after { right: 8px; }
 
 .controls {
   display: grid;
@@ -335,32 +378,40 @@ h1 {
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 34px 26px;
+  gap: 56px 22px;
   align-items: end;
   min-height: 300px;
   margin-top: 38px;
-  padding: 38px 12px 54px;
-  border-radius: 8px;
+  padding: 48px 14px 72px;
+  border-radius: 6px;
   background:
-    linear-gradient(180deg, transparent 0 48%, rgba(9, 13, 8, 0.46) 100%),
-    linear-gradient(transparent 0 72%, rgba(138, 170, 117, 0.11) 72%),
-    repeating-linear-gradient(
-      92deg,
-      transparent 0 42px,
-      rgba(138, 170, 117, 0.08) 42px 45px
-    );
+    radial-gradient(ellipse at 14% 30%, rgba(196, 111, 71, 0.04), transparent 38%),
+    radial-gradient(ellipse at 80% 18%, rgba(138, 170, 117, 0.05), transparent 42%),
+    linear-gradient(180deg, #1a2018 0%, #141812 48%, #0c0f0a 100%);
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
 }
 
 .graveyard::before {
   position: absolute;
+  inset: 0;
+  content: "";
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><g fill='none' stroke='%23131a10' stroke-width='1' opacity='0.55'><path d='M30 60 Q34 50 38 60 M36 60 Q40 48 44 60 M42 60 Q46 52 50 60'/><path d='M170 38 Q174 28 178 38 M176 38 Q180 26 184 38 M182 38 Q186 30 190 38'/><path d='M88 168 Q92 158 96 168 M94 168 Q98 156 102 168'/><path d='M148 192 Q152 182 156 192 M154 192 Q158 180 162 192 M160 192 Q164 184 168 192'/><path d='M14 132 Q18 122 22 132 M20 132 Q24 120 28 132'/></g><g fill='%23202817' opacity='0.5'><circle cx='62' cy='112' r='1.2'/><circle cx='128' cy='84' r='1'/><circle cx='196' cy='148' r='1.3'/><circle cx='52' cy='192' r='1'/><circle cx='112' cy='44' r='0.9'/><circle cx='180' cy='96' r='1.1'/></g></svg>");
+  background-size: 220px 220px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.graveyard::after {
+  position: absolute;
   inset: auto 0 0;
-  height: 92px;
-  border-radius: 0 0 8px 8px;
+  height: 64px;
   content: "";
   background:
-    radial-gradient(ellipse at 18% 70%, rgba(138, 170, 117, 0.16), transparent 30%),
-    radial-gradient(ellipse at 72% 65%, rgba(138, 170, 117, 0.12), transparent 36%),
-    linear-gradient(180deg, rgba(23, 29, 20, 0), rgba(8, 11, 7, 0.92));
+    radial-gradient(ellipse at 18% 100%, rgba(138, 170, 117, 0.14), transparent 36%),
+    radial-gradient(ellipse at 74% 100%, rgba(138, 170, 117, 0.1), transparent 42%),
+    linear-gradient(180deg, transparent 0%, rgba(6, 9, 5, 0.95) 92%);
+  pointer-events: none;
 }
 
 .empty-state {
@@ -382,14 +433,41 @@ h1 {
 
 .grave::after {
   position: absolute;
-  right: 16%;
-  bottom: 4px;
-  left: 16%;
-  height: 20px;
+  right: 8%;
+  bottom: -8px;
+  left: 8%;
+  height: 28px;
   border-radius: 50%;
   content: "";
-  background: rgba(0, 0, 0, 0.38);
-  filter: blur(12px);
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(70, 88, 56, 0.42), transparent 62%),
+    radial-gradient(ellipse at 50% 60%, rgba(0, 0, 0, 0.5), transparent 60%);
+  filter: blur(8px);
+  z-index: 0;
+}
+
+.grave-marker {
+  --jitter: 0deg;
+  --lift: 0px;
+  transform: rotate(var(--jitter)) translateY(var(--lift));
+}
+
+.grave:nth-child(5n+1) .grave-marker { --jitter: -1.4deg; --lift: 6px; }
+.grave:nth-child(5n+2) .grave-marker { --jitter: 0.9deg;  --lift: 0px; }
+.grave:nth-child(5n+3) .grave-marker { --jitter: -0.5deg; --lift: 14px; }
+.grave:nth-child(5n+4) .grave-marker { --jitter: 1.6deg;  --lift: 4px; }
+.grave:nth-child(5n+5) .grave-marker { --jitter: -1.1deg; --lift: 18px; }
+
+.grave-tuft {
+  position: absolute;
+  bottom: -4px;
+  width: 100%;
+  height: 22px;
+  z-index: 2;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 22' preserveAspectRatio='none'><g fill='none' stroke='%237a9866' stroke-width='1.4' stroke-linecap='round' opacity='0.85'><path d='M14 22 Q14 12 12 4 M18 22 Q18 14 22 6 M22 22 Q22 14 20 8'/><path d='M48 22 Q48 12 46 4 M52 22 Q52 14 56 6'/><path d='M88 22 Q88 14 86 6 M92 22 Q92 12 96 4 M96 22 Q96 16 100 10'/><path d='M132 22 Q132 14 130 6 M136 22 Q136 12 140 4'/><path d='M168 22 Q168 12 166 4 M172 22 Q172 14 176 6 M176 22 Q176 16 180 10'/></g></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .grave.departing {
@@ -425,13 +503,67 @@ h1 {
   border-radius: 44% 44% 8px 8px / 80px 80px 8px 8px;
   background:
     radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.22), transparent 24%),
-    repeating-linear-gradient(96deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 18px),
+    radial-gradient(circle at 78% 84%, rgba(31, 34, 28, 0.18), transparent 30%),
+    repeating-linear-gradient(96deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 18px),
     linear-gradient(180deg, var(--stone), var(--stone-mid));
   border: 2px solid rgba(255, 255, 255, 0.16);
   box-shadow:
     inset 0 12px 18px rgba(255, 255, 255, 0.12),
     inset 0 -18px 24px rgba(39, 42, 35, 0.16);
   text-align: center;
+  overflow: hidden;
+}
+
+.moss {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(0.4px);
+  mix-blend-mode: multiply;
+  opacity: 0.78;
+}
+
+.moss-tl {
+  top: -10px;
+  left: -8px;
+  width: 78px;
+  height: 64px;
+  background:
+    radial-gradient(circle at 30% 40%, #6b8a52 0 22%, transparent 26%),
+    radial-gradient(circle at 58% 30%, #557345 0 16%, transparent 20%),
+    radial-gradient(circle at 44% 64%, #7ea069 0 18%, transparent 24%),
+    radial-gradient(circle at 70% 56%, #4a6238 0 12%, transparent 18%);
+}
+
+.moss-br {
+  right: -14px;
+  bottom: 38px;
+  width: 92px;
+  height: 70px;
+  background:
+    radial-gradient(circle at 30% 40%, #5a7644 0 20%, transparent 24%),
+    radial-gradient(circle at 64% 56%, #7a9c64 0 18%, transparent 22%),
+    radial-gradient(circle at 48% 76%, #46613a 0 14%, transparent 20%);
+  opacity: 0.62;
+}
+
+.crack {
+  position: absolute;
+  top: 18%;
+  left: 38%;
+  width: 36%;
+  height: 60%;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 220' preserveAspectRatio='none'><path d='M52 4 L48 24 L56 46 L46 70 L52 94 L42 122 L50 150 L40 178 L46 208' fill='none' stroke='%232a2c25' stroke-width='1.1' stroke-linecap='round' opacity='0.62'/><path d='M48 24 L34 30 M56 46 L68 52 M46 70 L34 76 M52 94 L66 98 M42 122 L30 130 M50 150 L62 158' fill='none' stroke='%232a2c25' stroke-width='0.8' opacity='0.5'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.grave-content > :not(.moss):not(.crack) {
+  position: relative;
+  z-index: 1;
 }
 
 .grave-content::after {
@@ -530,12 +662,13 @@ h1 {
 }
 
 .grave.archived {
-  opacity: 0.66;
-  filter: grayscale(0.65);
+  opacity: 0.62;
+  filter: grayscale(0.7);
 }
 
 .grave.archived .grave-marker {
-  transform: rotate(-1deg);
+  --jitter: -3.2deg;
+  --lift: 22px;
 }
 
 .grave.burning {
