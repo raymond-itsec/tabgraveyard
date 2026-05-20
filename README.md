@@ -4,7 +4,7 @@ A tiny single-page app for burying URLs you swear you will read later. It stores
 
 ## Run Locally
 
-Open `pages/index.html` in a browser, or serve it with any static server:
+Open `docs/index.html` in a browser, or serve it with any static server:
 
 ```sh
 python3 -m http.server 8080 -d docs

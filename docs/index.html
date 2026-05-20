@@ -11,7 +11,7 @@
     <title>Tab Graveyard</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" href="./icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=7">
+    <link rel="stylesheet" href="./styles.css?v=8">
   </head>
   <body>
     <div class="scene" aria-hidden="true">
@@ -55,10 +55,10 @@
             <input id="search-input" type="search" placeholder="Find a grave...">
 
             <div class="segmented" role="group" aria-label="Filter graves">
-              <button class="active" type="button" data-filter="all">All</button>
-              <button type="button" data-filter="fresh">Fresh</button>
-              <button type="button" data-filter="ancient">Ancient</button>
-              <button type="button" data-filter="archived">Archive</button>
+              <button class="active" type="button" data-filter="all" aria-pressed="true">All</button>
+              <button type="button" data-filter="fresh" aria-pressed="false">Fresh</button>
+              <button type="button" data-filter="ancient" aria-pressed="false">Ancient</button>
+              <button type="button" data-filter="archived" aria-pressed="false">Archive</button>
             </div>
 
             <button class="ghost-button" id="mass-funeral" type="button">
@@ -106,6 +106,6 @@
       </template>
     </main>
 
-    <script src="./app.js?v=7" defer></script>
+    <script src="./app.js?v=8" defer></script>
   </body>
 </html>

@@ -33,13 +33,36 @@ const graveCount = document.querySelector("#grave-count");
 const ancientCount = document.querySelector("#ancient-count");
 const hauntCount = document.querySelector("#haunt-count");
 
+function isValidTab(tab) {
+  return (
+    tab &&
+    typeof tab === "object" &&
+    typeof tab.id === "string" &&
+    typeof tab.url === "string" &&
+    typeof tab.buriedAt === "string"
+  );
+}
+
 function loadTabs() {
+  let saved;
   try {
-    const saved = JSON.parse(localStorage.getItem(storageKey));
-    state.tabs = Array.isArray(saved) ? dedupeTabs(saved) : [];
-    saveTabs();
+    saved = JSON.parse(localStorage.getItem(storageKey));
   } catch {
     state.tabs = [];
+    return;
+  }
+
+  if (!Array.isArray(saved)) {
+    state.tabs = [];
+    return;
+  }
+
+  const valid = saved.filter(isValidTab);
+  state.tabs = dedupeTabs(valid);
+
+  // Only re-write storage if we actually pruned or merged something.
+  if (state.tabs.length !== saved.length) {
+    saveTabs();
   }
 }
 
@@ -122,6 +145,10 @@ function isAncient(tab) {
   return daysSince(tab.buriedAt) >= ancientDays;
 }
 
+function isHaunting(tab) {
+  return Boolean(tab.hauntAt) && new Date(tab.hauntAt) <= new Date();
+}
+
 function matchesFilter(tab) {
   if (state.filter === "fresh") return !tab.archived && !isAncient(tab);
   if (state.filter === "ancient") return !tab.archived && isAncient(tab);
@@ -149,6 +176,30 @@ function updateStats() {
   graveCount.textContent = active.length;
   ancientCount.textContent = active.filter(isAncient).length;
   hauntCount.textContent = active.filter((tab) => tab.hauntAt).length;
+}
+
+function renderActions(container, tab) {
+  const actions = tab.archived
+    ? [
+        { action: "restore", label: "Restore" },
+        { action: "burn", label: "Burn" }
+      ]
+    : [
+        { action: "resurrect", label: "Resurrect" },
+        { action: "archive", label: "Archive" },
+        { action: "haunt", label: "Haunt Me Later" }
+      ];
+
+  container.replaceChildren(
+    ...actions.map(({ action, label }) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.action = action;
+      button.textContent = label;
+      button.setAttribute("aria-label", `${label}: ${tab.title}`);
+      return button;
+    })
+  );
 }
 
 function renderEmpty() {
@@ -183,27 +234,25 @@ function renderTabs() {
 
     node.dataset.id = tab.id;
     node.classList.toggle("archived", tab.archived);
+    node.classList.toggle("haunting", !tab.archived && isHaunting(tab));
     title.textContent = tab.title;
     link.textContent = tab.url;
     link.href = tab.url;
     epitaph.textContent = tab.epitaph;
     buried.textContent = formatBuried(tab);
-    hauntDate.textContent = tab.hauntAt
-      ? `will haunt on ${new Date(tab.hauntAt).toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric"
-        })}`
-      : "";
-    actions.innerHTML = tab.archived
-      ? `
-          <button type="button" data-action="restore">Restore</button>
-          <button type="button" data-action="burn">Burn</button>
-        `
-      : `
-          <button type="button" data-action="resurrect">Resurrect</button>
-          <button type="button" data-action="archive">Archive</button>
-          <button type="button" data-action="haunt">Haunt Me Later</button>
-        `;
+
+    if (!tab.hauntAt) {
+      hauntDate.textContent = "";
+    } else if (isHaunting(tab)) {
+      hauntDate.textContent = "haunting now";
+    } else {
+      hauntDate.textContent = `will haunt on ${new Date(tab.hauntAt).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric"
+      })}`;
+    }
+
+    renderActions(actions, tab);
 
     fragment.append(node);
   });
@@ -283,9 +332,14 @@ function restore(id) {
 }
 
 function burn(id) {
+  const tab = state.tabs.find((item) => item.id === id);
+  const titlePart = tab ? ` "${tab.title}"` : "";
+  if (!window.confirm(`Burn${titlePart}? This cannot be undone.`)) return;
+
   const grave = [...document.querySelectorAll(".grave")].find((item) => item.dataset.id === id);
   if (grave) {
     grave.classList.add("burning");
+    grave.style.pointerEvents = "none";
   }
 
   window.setTimeout(
@@ -334,16 +388,30 @@ form.addEventListener("submit", (event) => {
   addTab(urlInput.value);
 });
 
-searchInput.addEventListener("input", (event) => {
-  state.query = event.target.value;
+function debounce(fn, delay) {
+  let timeoutId;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => fn(...args), delay);
+  };
+}
+
+const handleSearchInput = debounce((value) => {
+  state.query = value;
   renderTabs();
+}, 120);
+
+searchInput.addEventListener("input", (event) => {
+  handleSearchInput(event.target.value);
 });
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     state.filter = button.dataset.filter;
     filterButtons.forEach((item) => {
-      item.classList.toggle("active", item === button);
+      const isActive = item === button;
+      item.classList.toggle("active", isActive);
+      item.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
     renderTabs();
   });
